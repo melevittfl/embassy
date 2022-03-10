@@ -94,7 +94,7 @@ def main():
     wait.until(
         EC.element_to_be_clickable((By.XPATH, "//input[@value='Make Appointment!']"))
     ).click()
-
+    logging.info("Reached service selection")
     wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@value='AA']"))).click()
 
     wait.until(
@@ -104,7 +104,7 @@ def main():
     wait.until(
         EC.element_to_be_clickable((By.XPATH, "//input[@value='Submit']"))
     ).submit()
-
+    logging.info("Reached calendar")
     month_dropdown = Select(
         wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='nMonth']")))
     )
