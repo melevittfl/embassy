@@ -139,7 +139,7 @@ def main():
     else:
         logging.info(f"No appointments for {month_to_check.name}")
 
-    time.sleep(10)
+    time.sleep(5)
 
     driver.quit()
     logging.info("Done")
