@@ -33,6 +33,7 @@ class Months(Enum):
 
 
 month_to_check = Months.APRIL
+earliest_day = 11
 
 
 def send_notification(message):
@@ -123,12 +124,15 @@ def main():
     for row in appointment_calendar.find_elements(By.XPATH, value=".//tr"):
         for day in row.find_elements(By.XPATH, value=".//td"):
             # print(day.text)
-            if "#ffffc0" == day.get_attribute("bgcolor"):
+            if (
+                "#ffffc0" == day.get_attribute("bgcolor")
+                and int(day.text.split()[0]) >= earliest_day
+            ):
                 appointment_days.append(day.text)
 
     if appointment_days:
-        logging.info("Found appointments!")
-        output = [f"Month: {month_to_check.name}"]
+        logging.info("Found appointments")
+        output = [f"Month: {month_to_check.name} on the {earliest_day} or later."]
         for day in appointment_days:
             day_list = day.replace("\n", ",").split(",")
             output.append(f"Day: {day_list[0]} {day_list[1]}")
@@ -137,7 +141,9 @@ def main():
         logging.info("Sending push notification")
         send_notification("\n".join(output))
     else:
-        logging.info(f"No appointments for {month_to_check.name}")
+        logging.info(
+            f"No appointments for {month_to_check.name} the {earliest_day}th or later"
+        )
 
     time.sleep(5)
 
