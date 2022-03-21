@@ -8,13 +8,20 @@ from enum import Enum
 import logging
 import logging.config
 from log_config import *
-
+import datetime
+import sys
 import undetected_chromedriver as uc
 
 
 import httpx
 import time
 import os
+
+PASSED_OR_NOT_YET = "#c0c0c0"
+
+APPOINTMENTS_AVAILABLE = "#ffffc0"
+
+ALL_TAKEN = "#ADD9F4"
 
 
 class Months(Enum):
@@ -62,7 +69,8 @@ def main():
     logging.info("Launching headless browser")
     options = uc.ChromeOptions()
 
-    options.add_argument("--headless")
+    if "darwin" != sys.platform:
+        options.add_argument("--headless")
 
     driver = uc.Chrome(options=options)
 
@@ -124,11 +132,21 @@ def main():
     for row in appointment_calendar.find_elements(By.XPATH, value=".//tr"):
         for day in row.find_elements(By.XPATH, value=".//td"):
             # print(day.text)
-            if (
-                "#ffffc0" == day.get_attribute("bgcolor")
-                and int(day.text.split()[0]) >= earliest_day
-            ):
-                appointment_days.append(day.text)
+            day_color = day.get_attribute("bgcolor")
+            appointment_day = day.text.replace("\n", ",").split(",")
+            if appointment_day[0].isdigit():
+                date = int(appointment_day[0])
+                if datetime.datetime(2022, int(month_to_check.value), date).weekday() < 5:
+                    if ALL_TAKEN == day_color:  # Day with all appointments take
+                        logging.info(f"Day: {date:02} - All appointments taken")
+                    elif APPOINTMENTS_AVAILABLE == day_color:  # Day with appointments
+                        logging.info(f"Day: {date:02} {appointment_day[1]}")
+                        if int(day.text.split()[0]) >= earliest_day:
+                            appointment_days.append(day.text)
+                    elif (
+                        PASSED_OR_NOT_YET == day_color
+                    ):  # Day passed or no appointments yet
+                        logging.info(f"Day: {date:02} - Date passed or not open yet")
 
     if appointment_days:
         logging.info("Found appointments")
