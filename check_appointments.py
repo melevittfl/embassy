@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from enum import Enum
 import logging
@@ -77,14 +77,14 @@ def main():
     driver.get("https://evisaforms.state.gov/Instructions/ACSSchedulingSystem.asp")
 
     country_dropdown = Select(
-        wait.until(EC.element_to_be_clickable((By.NAME, "CountryCodeShow")))
+        wait.until(ec.element_to_be_clickable((By.NAME, "CountryCodeShow")))
     )
 
     country_dropdown.select_by_visible_text("GREAT BRITAIN AND NORTHERN IRELAND")
 
     city_dropdown = Select(
         wait.until(
-            EC.element_to_be_clickable(
+            ec.element_to_be_clickable(
                 (By.XPATH, "/html/body/form/table/tbody/tr[4]/td[3]/select")
             )
         )
@@ -93,27 +93,27 @@ def main():
     city_dropdown.select_by_value("LND")
 
     wait.until(
-        EC.element_to_be_clickable(
+        ec.element_to_be_clickable(
             (By.XPATH, "/html/body/form/table/tbody/tr[5]/td[3]/input[1]")
         )
     ).submit()
     logging.info("Reached 'Make Appointment'")
     wait.until(
-        EC.element_to_be_clickable((By.XPATH, "//input[@value='Make Appointment!']"))
+        ec.element_to_be_clickable((By.XPATH, "//input[@value='Make Appointment!']"))
     ).click()
     logging.info("Reached service selection")
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@value='AA']"))).click()
+    wait.until(ec.element_to_be_clickable((By.XPATH, "//input[@value='AA']"))).click()
 
     wait.until(
-        EC.element_to_be_clickable((By.XPATH, "//input[@name='chkbox01']"))
+        ec.element_to_be_clickable((By.XPATH, "//input[@name='chkbox01']"))
     ).click()
 
     wait.until(
-        EC.element_to_be_clickable((By.XPATH, "//input[@value='Submit']"))
+        ec.element_to_be_clickable((By.XPATH, "//input[@value='Submit']"))
     ).submit()
     logging.info("Reached calendar")
     month_dropdown = Select(
-        wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='nMonth']")))
+        wait.until(ec.element_to_be_clickable((By.XPATH, "//select[@name='nMonth']")))
     )
 
     month_dropdown.select_by_value(month_to_check.value)
