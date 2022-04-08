@@ -38,7 +38,7 @@ class Months(Enum):
 
 
 month_to_check = Months.APRIL
-earliest_day = 11
+earliest_day = 13
 
 
 def send_notification(message):
