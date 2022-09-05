@@ -38,6 +38,7 @@ class Months(Enum):
 
 
 month_to_check = Months.APRIL
+year_to_check = 2022
 earliest_day = 13
 
 
@@ -134,7 +135,7 @@ def main():
             appointment_day = day.text.replace("\n", ",").split(",")
             if appointment_day[0].isdigit():
                 date = int(appointment_day[0])
-                if datetime.datetime(2022, int(month_to_check.value), date).weekday() < 5:
+                if datetime.datetime(year_to_check, int(month_to_check.value), date).weekday() < 5:
                     if ALL_TAKEN == day_color:  # Day with all appointments take
                         logging.info(f"Day: {date:02} - All appointments taken")
                     elif APPOINTMENTS_AVAILABLE == day_color:  # Day with appointments
